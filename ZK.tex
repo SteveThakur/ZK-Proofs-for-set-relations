@@ -534,9 +534,33 @@ We first briefly review the protocol $\ttt{ZKPoKE}$ from [BBF19], which we will 
 
 \noin 4. The Verifier accepts if and only if $r_x,r_{\rho}\in [\ell]$ and the equations $Q_g^{\ell}\cdot g^{r_x}h^{r_{\rho}} = A_gz^c$,\\ $Q_u^{\ell}\cdot u^{r_x} = A_u w^{c}  $ hold.\qed \end{enumerate}
 
-The protocol $\tt{ZKPoKE}$ is an HVZK protocol \verb|PoKE| is an argument of knowledge for the relation \vs $$\mc{R}_{\tt{PoKE}}:= \big\{\big((u,w)\in \bG);\; x\in \bz\big)\;:\; w = u^x \in \bG  \big\}.$$
+\noin The protocol $\tt{ZKPoKE}$ is an HVZK protocol \verb|PoKE| is an argument of knowledge for the relation \vs $$\mc{R}_{\tt{PoKE}}:= \big\{\big((u,w)\in \bG);\; x\in \bz\big)\;:\; w = u^x \in \bG  \big\}.$$ Clearly, the relation $\mc{R}_{\tt{PoKE}}$ is transitive in the sense that for elements $a_1,a_2,a_3\in\mb{G}$, if a prover $\mP$ possesses integers $d_1,d_2$ such that $a_1^{d_1} = a_2\;,\;a_2^{d_2} = a_3$, then he possesses the integer $d_1d_2$ which fulfills the equation $a_1^{d_1d_2} = a_3$. Henceforth, we denote the zero-knowledge proof of knowledge of the discrete logarithm between $a,b\in\mb{G}$ by $\verb|ZKPoKE|[a,\;b]$.
 
-We now start out with a fairly simple protocol . We show how a Prover could probabilistically demonstrate that two discrete logarithms are equal, with a constant-sized proof. In other words, the protocol allows a Prover to show that two pairs $[a_1, b_1]$, $[a_2, b_2]$ of $\bG$-elements are commitments to the same set/multiset. We provide an argument of knowledge for  the following relation:\vs
+In particular, if $a$, $b$ are commitments \vs $$ a = \ttt{Com}(g, \mc{M}) := g^{\Pi(\mcM)}\;\;,\;\;a = \ttt{Com}(g, \mc{N}) := g^{\Pi(\mc{N})}  \vs $$ to sets/multisets $\mcM$, $\mc{N}$ with  a common base $x\in\bG$, the protocol demonstrates that $\mcM\sub \mc{N}$ without revealing anything about $\mcM$ or $\mc{N}$. The protocol can also be adapted to a setting where the commitments to $\mc{M}$, $\mc{N}$ are made perfectly hiding using a Pedersen commitment.
+
+Suppose $a = g^{d}h^{r}$, $b = g^{\wti{d}}h^{\wti{r}}$ where the integers $r$, $\wti{r}$ are randomly selected. To demonstrate that $d$ divides $\wti{d}$, the Prover and the Verifier may proceed as follows:\vspace{0.1cm}
+
+\begin{Prot} \normalfont \hypertarget{ZKPoKEPed}{\textit{Zero knowledge proof of the knowledge of the Exponent for Pedersen commitments}} :\end{Prot} \vspace{-0.3cm}
+
+\noin \textbf{Parameters:} $\mb{G}\xleftarrow{\$} \mr{GGen}(\lamb)$,  $g,h\in \mb{G}$ such that $\la g \ra = \la h \ra$.
+
+\noin \textbf{Inputs:} Elements $a,b\in\bG$
+
+\noin \textbf{Claim:} The Prover possesses integers $d_1,d_2$, $r_1,r_2$ such that \vs $$a = g^{d_1}h^{r_1} \;\wedge\; b = g^{d_2}h^{r_2} \;\wedge\; d_2\equiv 0\Mod{d_1} . \vs $$
+
+\begin{enumerate}[wide, labelwidth=!, labelindent=0pt]\vs \item
+
+
+\noin 1. The Prover $\mP$ computes the integer $e:= \wti{d}\cdot{d}^{-1}$ and sends $\wti{a}:= a^{e}\in \bG$ to the Verifier $\V$ along with a non-interactive proof for $\ttt{ZKPoKE}[a,\;\wti{a}]$.
+
+\noin 2. $\mP$ computes $\wti{h}:= \wti{a}^{-1}\cdot b\in \bG$ and sends a non-interactive proof for $\ttt{ZKPoKE}[h,\;\wti{h}]$ to $\V$.
+
+\noin 3. $\V$ accepts if and only if both \verb|ZKPoKE|s are valid.\qed \end{enumerate}
+
+
+  
+
+We now start out with a fairly simple protocol . We show how a Prover could probabilistically demonstrate that two discrete logarithms are equal, with a constant-sized proof. In other words, the protocol allows a Prover to show that two pairs $[a_1, b_1]$, $[a_2, b_2]$ of $\bG$-elements are commitments to the same set/multiset. The protocol is useful whenever we need to compare two discrete logarithms with different bases. We provide an HVZK argument of knowledge for  the following relation:\vs
 
 \[
   \mc{R}_{\ttt{EqDLog}}[(a_1, b_1),\;(a_2,b_2)] = \left\{\begin{array}{l}
@@ -598,7 +622,7 @@ We now start out with a fairly simple protocol . We show how a Prover could prob
 
 
 
-\noin We can also generalize the protocol \verb|ZKPoEqDLog| as follows. For a public polynomial {$f(X)\in \bz[X]$}, an honest Prover can provide a constant-sized ZK proof that he possesses integers $d_1,d_2$ such that \vs $$a_1^{d_1} = b_1\;,\;a_2^{d_2} = b_2\;,\;f(d_1) = d_2. \vs $$ We provide an HVZK argument of knowledge for the relation 
+\noin We can also generalize the protocol \verb|ZKPoEqDLog| as follows. For a public polynomial {$f(X)\in \bz[X]$}, an honest Prover can provide a constant-sized ZK proof that he possesses integers $d_1,d_2$ such that \vs $$a_1^{d_1} = b_1\;,\;a_2^{d_2} = b_2\;,\;f(d_1) = d_2. $$ We provide an HVZK argument of knowledge for the relation \vs
 
 \[
   \mc{R}_{{\ttt{PolyDLog}}}[(a_1, b_1),\;(a_2,b_2),\;f] = \left\{\begin{array}{l}
@@ -610,9 +634,9 @@ We now start out with a fairly simple protocol . We show how a Prover could prob
 
 \vspace{0.1cm}
 
-The non-ZK argument of knowledge for this relation ([TH20B]) is fairly simple. The Prover sends the remainders $r_i:= d_i\Mod{\ell}$ for a randomly chosen $\lam$-bit prime challenge $\ell$. He verifiably shows that $r_i\equiv d_i\Mod{\ell}$ by sending the $\ell$-th roots of $b_ia_i^{-r_i}$. The Verifier verifies the exponentiations and the equation $r_2\equiv f(r_1)\Mod{\ell}$.
+The non-ZK argument of knowledge for this relation ([TH20B]) is fairly simple. The Prover sends the remainders $r_i:= d_i\Mod{\ell}$ for a randomly chosen $\lam$-bit prime challenge $\ell$. He verifiably shows that $r_i\equiv d_i\Mod{\ell}$ by sending the $\ell$-th roots of $b_ia_i^{-r_i}$. The Verifier verifies the exponentiations and the congruence $r_2\equiv f(r_1)\Mod{\ell}$.
 
-The zero-knowledge variant is a bit more subtle since it requires a blinding factor. The Prover can no longer send over the remainders $r_i:= d_i\Mod{\ell}$ since such a protocol is inherently not zero-knowledge. However, the protocol can be be made zero-knowledge with a modification that hinges on the observation that the following are equivalent with \op.
+The zero-knowledge variant is a bit more subtle since it requires a blinding factor. The Prover can no longer send over the remainders $r_i:= d_i\Mod{\ell}$ since such a protocol is inherently \textit{not} zero-knowledge. However, the protocol can be be made zero-knowledge with a modification that hinges on the observation for integers $d_1$, $d_2$,  that the following are equivalent with \op.\vspace{0.1cm}
 
 \noin 1. $d_2 = f(d_1)$\\
 \noin 2. $f(d_1)\equiv d_2\Mod{\gamma}$ for a randomly generated $\lam$-bit prime $\gamma$.\\
@@ -634,27 +658,40 @@ The zero-knowledge variant is a bit more subtle since it requires a blinding fac
 
 \noin 3. The hashing algorithm $\ttt{H}_{\ttt{FS},\lam}$ generates a $\lam$-bit prime $\gamma$.
 
-\noin 4. $\mP$ computes $A_2:= a_1^{f(d_1+k\gamma)}\in\bG$ and sends it to $\V$.
+\noin 4. $\mP$ sends $A_2:= a_1^{f(d_1+k\gamma)}\in\bG$ to $\V$.
 
 \noin 5. The hashing algorithm $\ttt{H}_{\ttt{FS},\lam}$ generates a $\lam$-bit prime $\ell$.
 
-\noin 6. $\mP$ computes the integers $q$, $r$ such that \vs $$d_1+k\gamma = q_1\cdot \ell + r_1\;,\; f(d_1+k\gamma) = q_2\cdot \ell + r_2\;\;,\;\;r,r_1\in [\ell]   \vs $$ and sends $Q_1:= a_1^{q_1}\;,\; Q_2:= a_1^{q_2}\;\in\; \bG$ to $\V$.
+\noin 6. $\mP$ computes the integers $q_1$, $r_1$, $q_2$, $r_2$ such that \vs $$d_1+k\gamma = q_1\cdot \ell + r_1\;,\; f(d_1+k\gamma) = q_2\cdot \ell + r_2\;\;,\;\;r_1,r_2\in [\ell]   \vs $$ and sends $r_1$, $Q_1:= a_1^{q_1}\;,\; Q_2:= a_1^{q_2}$ to $\V$.
 
 \noin 7. $\mP$ generates a non-interactive proof for $\ttt{ZKPoKE}[A_1^{\gamma},\; A_2\cdot b_{1,2}^{-1}]$ and sends it to $\V$.
 
-\noin 8. $\mP$ chooses random $\rho_d,\rho_k\in [-B, B]$ and sends $z:= g^d h^{\rho_d}$, $A_g:= g^k h^{\rho_k}\in \bG$ to $\V$.
+\noin 8. $\mP$ chooses random $\rho_d,\rho_k\in [-B, B]$ and sends $\wti{g}:= g^d h^{\rho_d}$, $A_g:= g^k h^{\rho_k}\in \bG$ to $\V$.
 
-\noin 9. The hashing algorithm $\ttt{H}_{\ttt{FS},\lam}$ generates $\lam$-bit primes $c, \ell_0$. 
+\noin 9. The hashing algorithm $\ttt{H}_{\ttt{FS},\lam}$ generates $\lam$-bit primes $c$, $\ell_0$. 
 
 \noin 10. $\mP$ computes the integers $q_d$, $r_d$, $q_{\rho}$, $r_{\rho}$ such that \vs $$c\cdot d_1 + k = q_d\cdot \ell_0 + r_d\;,\; c\cdot \rho_d + \rho_k = q_{\rho}\cdot \ell_0 + r_{\rho}\;\;,\;\;r_{\rho},r_d\in [\ell_0] \vs $$ and sends $r_{d}$, $r_{\rho}$, $Q_g:= g^{q_d}h^{q_{\rho}}$, $Q:= a_1^{q_d}$ to $\V$.
 
 \noin 11. $\V$ verifies that $r_{d}, r_{\rho}\in [\ell_0]$, $r_1\in [\ell]$ and computes $r_2:= f(r_1)\Mod{\ell}$.
 
-\noin 12. $\V$ verifies the equations \vs $$Q_1^{\ell}a_1^{r_1} \sta b_1 \cdot A_1\;\;\bigwedge\;\; Q_2^{\ell}a_2^{r_2} \sta A_2 \;\;\bigwedge\;\; Q_g^{\ell_0}g^{r_d}h^{r_{\rho}}\sta A_1z^c \;\;\bigwedge\;\; Q^{\ell_0}a_1^{r_d}\sta A_1 b_1^c .\vs $$ He accepts if and only if all four equations hold and the proof for $\ttt{ZKPoKE}[A_1^{\gamma},\; A_2\cdot b_{1,2}^{-1}]$ is valid.\qed \end{enumerate}
+\noin 12. $\V$ verifies the equations \vs $$Q_1^{\ell}a_1^{r_1} \sta b_1 \cdot A_1^{\gamma}\;\;\bigwedge\;\; Q_2^{\ell}a_2^{r_2} \sta A_2 \;\;\bigwedge\;\; Q_g^{\ell_0}g^{r_d}h^{r_{\rho}}\sta A_1\cdot \wti{g}^c \;\;\bigwedge\;\; Q^{\ell_0}a_1^{r_d}\sta A_1 b_1^c .\vs $$ He accepts if and only if all four equations hold and the proof for $\ttt{ZKPoKE}[A_1^{\gamma},\; A_2\cdot b_{1,2}^{-1}]$ is valid.\qed \end{enumerate}
 
-\subsection{\fontsize{11}{11}\selectfont Containment of the underlying sets of committed multisets}
 
-\noin \hypertarget{Sets}{Let $a_1,a_2$ be elements of $\mb{G}$. Let $\mc{M} , \mc{N}$ be multisets of rational primes.} Let \vs $$A_1:= \ttt{Com}(g, \mc{M}) =  a_1^{\Pi(\mc{M})}\;,\; A_2:= \ttt{Com}(g, \mc{N}) = a_2^{\Pi(\mc{N})}\;\in\;\bG \vs $$ be the commitments to $\mc{M}$, $\mc{N}$ with bases $a_1, a_2\in \bG$.
+For instance, the special case of protocol $\ttt{ZKPoPolyDLog}$ where $f(X) = X^n$ for some integer $n$ can be used to show that for a tuple $(a_1, a_2, b_1, b_2)\in \mb{G}^4$, there exists a multiset $\mcM$ such that \vs $$ a_1^{\Pi(\mcM)} = b_1\;\;,\;\; a_2^{\Pi(n\cdot\mcM)} = b_2   \vs $$ without revealing anything about $\mcM$, where $n\cdot\mcM:= \big\{\big(n\cdot \mult(x, \mcM)\big)\times x:\; x\in \sett({\mcM})\big\}.$
+
+
+\begin{Prop} The protocol ZKPoPolyDLog is an HVZK argument of knowledge for the relation $\mc{R}_{\tt{PolyDLog}}$.\end{Prop}
+
+\begin{prf} \end{prf}
+
+
+
+
+
+
+\subsection{\fontsize{11}{11}\selectfont Underlying sets of committed multisets}
+
+\noin \hypertarget{Sets}{Let $a_1,a_2$ be elements of $\mb{G}$. Let $\mc{M}$ , $\mc{N}$ be multisets of rational primes.} Let \vs $$A_1:= \ttt{Com}(g, \mc{M}) =  a_1^{\Pi(\mc{M})}\;,\; A_2:= \ttt{Com}(g, \mc{N}) = a_2^{\Pi(\mc{N})}\;\in\;\bG \vs $$ be the commitments to $\mc{M}$, $\mc{N}$ with bases $a_1, a_2\in \bG$.
 
 Clearly, the relation $\mc{N}\sub \mc{M}$ can be demonstrated by the protocol \verb|PoKE|$[A_2, A_1]$. We now show that the protocol \verb|PolyDLog| allows a Prover to succinctly demonstrate the following relations between the underlying sets of $\mc{M}$, $\mc{N}$, the proofs for which can be publicly verified against the commitments to $\mc{M}$ and $\mc{N}$.\vspace{0.1cm}
 
@@ -666,7 +703,7 @@ Clearly, the relation $\mc{N}\sub \mc{M}$ can be demonstrated by the protocol \v
 
 \noin Before we describe the protocols, we note a few basic facts. Clearly, we have \vs $$\sett(\mc{M}) = \sett(\mc{N})\LRA \sett(\mc{M}) \sub \sett(\mc{N})\;\bigwedge\; \sett(\mc{N}) \sub \sett(\mc{M}).$$ Furthermore, with notations as before, we have \vs $$\sett(\mc{M})\sub \sett(\mc{N})\LRA \exists\; N\in\bz\;:\;\Pi(\mc{M})^N\equiv 0\Mod{\Pi(\mc{N})}.$$ Likewise, to show that $\sett(\mc{M})\nsub \sett(\mc{N})$, it suffices to show that there exists an integer $p$ such that \vs $$p\notin \{-1,1\}   \;\;\bigwedge\;\;\Pi(\mc{M})\equiv 0\Mod{p} \;\;\bigwedge\;\; \GCD(\Pi(\mc{N}),{p})=1.$$
 
-\begin{Prot} \hypertarget{Sets}{Protocol for the containment of underlying sets $(\tt{PoConSets})$.}\end{Prot} \vspace{-0.3cm}
+\begin{Prot} \hypertarget{Sets}{ZK Proof of containment of underlying sets $(\tt{ZKPoConSets})$.}\end{Prot} \vspace{-0.3cm}
 
 \noin \textbf{Parameters:} $\mb{G}\xleftarrow{\$} \mr{GGen}(\lamb), \; g, h\in \mb{G}$ such that $\la g \ra = \la h \ra$.
 
@@ -683,6 +720,19 @@ Clearly, the relation $\mc{N}\sub \mc{M}$ can be demonstrated by the protocol \v
 \noin 4. $\V$ verifies the two proofs and accepts if and only if both are valid.\qed \end{enumerate}
 
 
+\begin{Prot} ZK Protocol for the non-containment of underlying sets $(\tt{ZKPoNonConSets})$.\end{Prot}\vspace{-0.3cm}
+
+\noin \textbf{Parameters:} $\mb{G}\xleftarrow{\$} \mr{GGen}(\lamb), \; g\in \mb{G}$. 
+
+\noin \textbf{Input:} Elements $a_1,a_2\in\mb{G}$; commitments $A_1 := \ttt{Com}(a_1, \mc{M}) = a_1^{\Pi(\mc{M})}\;,\;A_2 := \ttt{Com}(a_2, \mc{N})= a_2^{\Pi(\mc{N})}$ to multisets $\mc{M}$, $\mc{N}$.
+
+\noin \textbf{Claim:} $\sett(\mc{M})\nsub \sett(\mc{N})$. \vs
+
+\begin{enumerate}[wide, labelwidth=!, labelindent=0pt] \vs \item The Prover chooses an integer $p\in \sett(\mc{M})\setminus \sett(\mc{N}).$ and computes $b_1: = a_1^p$. He sends $b_1$ to the Verifier $\V$ along with a non-interactive proof for \verb|ZKPoKE|$[b_1, A_1]$.
+
+\noin 2. $\mP$ generates a non-interactive proof for \verb|ZKPoRelPrimeDLog|$[(a_1, b_1),\; (a_2, A_2)]$ and sends it to $\V$.
+
+\noin 3. $\V$ checks that $b_1\notin \{ a_1, a_1^{-1}\}$ and verifies the proofs for \verb|ZKPoRelPrimeDLog|$[(a_1, b_1),\; (a_2, A_2)]$ and \verb|ZKPoKE|$[b_1, A_1]$. He accepts if and only if both proofs are valid.\qed \end{enumerate}
 
 
 
@@ -692,8 +742,7 @@ Clearly, the relation $\mc{N}\sub \mc{M}$ can be demonstrated by the protocol \v
 
 
 
-
-\section{\fontsize{12}{12}\selectfont Disjointness of sets}
+\section{\fontsize{12}{12}\selectfont HVZK arguments for set operations}
 
 The goal of this section is to provide a protocol for demonstrating disjointness of multiple data sets/multisets. The proofs can be publicly verified against the succinct commitments to these multisets. To that end, we first describe a protocol whereby an honest Prover can show that the GCD of two discrete logarithms equals a third discrete logarithm while keeping the communication complexity constant. One obvious application is proving disjointness of sets/multisets in accumulators instantiated with hidden order groups. We formulate an HVZK argument of knowledge for the relation \vs  $$\mc{R}_{{\ttt{GCD}}}[(a_1,b_1),\;(a_2,b_2),\;(a_3,b_3)] = \{((a_i, b_i\in\mb{G});\;d_i\in\bz)\;:\; b_i = a_i^{d_i},\;\GCD(d_1,d_2)=d_3  \} . \vs $$ We construct a protocol that has communication complexity independent of the elements $a_i, b_i$. The protocol rests on the basic fact that \vs $$d_3 = \GCD(d_1, d_2)\;\; \LRA \;\;(d_1\equiv d_2\equiv 0 \Mod{d_3})\;\bigwedge \; \left(\exists \; (x_1,x_2)\in \bz^2:\; d_3 = x_1d_1+x_2d_2  \right).$$
  
@@ -711,10 +760,14 @@ The goal of this section is to provide a protocol for demonstrating disjointness
  
 
 \begin{enumerate}[wide, labelwidth=!, labelindent=0pt]\vs \item The Prover $\mc{P}$ computes $b_{1,2}:= a_1^{d_2}\;,\; b_{1,3}:= a_1^{d_3}\;\in\;\bG$ and sends them to the Verifier $\V$.
-\noin 2. $\mP$ generates non-interactive proofs for \verb|ZKPoEqDLog|$[(a_2, b_2),\; (a_1, b_{1,2})]$, \verb|ZKPoEqDLog|$[(a_3, b_3),\; (a_1, b_{1,3})]$ and sends them to $\mc{V}$.\\
+
+\noin 2. $\mP$ generates non-interactive proofs for \verb|ZKPoEqDLog|$[(a_2, b_2),\; (a_1, b_{1,2})]$, \verb|ZKPoEqDLog|$[(a_3, b_3),\; (a_1, b_{1,3})]$ and sends them to $\mc{V}$.
+
 \noin 3. $\mc{P}$ generates non-interactive proofs for \verb|ZKPoKE|$[b_{1,3},\;b_1 ]$ and \verb|ZKPoKE|$[b_{1,3},\;b_{1,2} ]$ and sends them to $\V$.\\
-\noin 4. $\mc{P}$ uses the Euclidean algorithm to compute integers $e_1, e_2$ such that \vs $$e_1d_1 + e_2d_2 = d_3\;\;,\;\; |e_1| < |d_2|\;,\; |e_2| < |d_1|.$$
-\noin 5. $\mc{P}$ computes $$\wti{b}_1:= b_1^{e_1}\;,\; \wti{b}_{1,2}:= b_{1,2}^{e_2}\;\in\;\bG \vs $$ and sends them to $\V$ along with non-interactive proofs for \verb|ZKPoKE|$[b_1,\; \wti{b}_1]$ and \verb|ZKPoKE|$[b_{1,2},\; \wti{b}_{1,2}]$.\\
+\noin 3. $\mc{P}$ uses the Euclidean algorithm to compute integers $e_1, e_2$ such that \vs $$e_1d_1 + e_2d_2 = d_3\;\;,\;\; |e_1| < |d_2|\;,\; |e_2| < |d_1|. \vs $$
+
+\noin 5. $\mc{P}$ computes $$\wti{b}_1:= b_1^{e_1}\;,\; \wti{b}_{1,2}:= b_{1,2}^{e_2}\;\in\;\bG \vs $$ and sends them to $\V$ along with non-interactive proofs for \verb|ZKPoKE|$[b_1,\; \wti{b}_1]$ and \verb|ZKPoKE|$[b_{1,2},\; \wti{b}_{1,2}]$.
+
 \noin 6. $\mc{V}$ verifies all of the proofs he receives in addition to the equation \vs $$\wti{b}_1\cdot \wti{b}_{1,2}\stackrel{?}{=} b_{1,3}\;\in\;\bG. \vs $$ He accepts the validity of the claim if and only if all of these proofs are valid.\qed \end{enumerate}
 
 
@@ -751,6 +804,37 @@ The goal of this section is to provide a protocol for demonstrating disjointness
 
 \begin{prf} This is a special case of Proposition \ref{GCDProof}.\end{prf}
 
+The protocol $\tt{ZKPoGCD}$ can also be adapted for Pedersen commitments to sets or multisets. Suppose $ a_i:= g^{d_i}h^{r_i}\in \bG $ ($i=1,2,3$) where the $d_i$ are integers such that $\GCD(d_1,d_2) = d_3$ and the $r_i$ are randomly selected integers. The Prover can demonstrate that $\GCD(d_1,d_2) = d_3$ as follows, without revealing anything about the integer $d_i$. \vspace{0.1cm}
+
+\begin{Prot} \normalfont \hypertarget{GCDPedersen}{\textit{Zero knowledge proof of the greatest common divisor for Pedersen commitments}} (\verb|ZKPoGCD|):\end{Prot} \vspace{-0.3cm}
+
+\noin \textbf{Parameters:} $\mb{G}\xleftarrow{\$} \mr{GGen}(\lamb)$,  $g,h\in \mb{G}$ such that $\la g \ra = \la h \ra$.
+
+\noin \textbf{Input:} Elements $a_1, a_2, a_3\in \mb{G}$.
+
+\noin \textbf{Claim:} The Prover possesses integers $d_i$, $r_i$ ($i=1,2,3$) such that:
+
+\noin - $a_i = g^{d_i}h^{r_i}$\\
+\noin - $\GCD(d_1, d_2) = d_3$
+
+\begin{enumerate}[wide, labelwidth=!, labelindent=0pt]\vs \item $\mP$ computes the integers $d_{1,3}:= d_1\cdot d_3^{-1}$, $d_{2,3}:= d_2\cdot d_3^{-1}$ and sends $a_{1,3}:= a_3^{d_{1,3}}\;,\;a_{1,3}:= a_3^{d_{1,3}}\;\in\;\bG$ to $\V$ along with non-interactive proofs for $\ttt{ZKPoKE}[a_3,\;a_{1,3}]$, $\ttt{ZKPoKE}[a_3,\;a_{2,3}]$.
+
+\noin 2. $\mP$ computes \vs $$h_{1,3}:= h^{r_1 - d_{1,3}r_3}\;,\; h_{2,3}:= h^{r_2 - d_{2,3}r_3}\;\in\;\bG\vs $$ and sends non-interactive proofs for $\ttt{ZKPoKE}[h,\;h_{1,3}]$, $\ttt{ZKPoKE}[h,\;h_{2,3}]$ to $\V$.
+
+\noin 3. $\mP$ computes integers $e_1$, $e_2$ such that $e_1d_1+e_2d_2 = d_3$. 
+
+\noin 4. $\mP$ computes \vs $$ \wti{a}_1:= a_1^{e_1}\;,\;  \wti{a}_2:= a_2^{e_2}\;\in\;\bG \vs $$ and sends them to $\V$ along with non-interactive proofs for $\ttt{ZKPoKE}[a_1,\wti{a}_1]$, $\ttt{ZKPoKE}[a_2,\wti{a}_2]$.
+
+\noin 5. $\mP$ computes $\wti{h}:= h^{e_1r_1+e_2r_2-r_3}\in \bG$ and sends it to $\V$ along with a non-interactive proof for $\ttt{ZKPoKE}[h,\;\wti{h}]$.
+
+\noin 5. $\V$ verifies the five \verb|ZKPoKE|s he receives in addition to the equations $ \wti{a}_1\cdot \wti{a}_2\sta a_3 $. He accepts if and only if the equaiton holds and all five \verb|ZKPoKE|s are valid.\qed \end{enumerate}
+
+
+
+
+\bigskip
+\bigskip
+
 
 
 It is easy to see that the protocols \verb|ZKPoGCD| may be combined with the protcol \verb|ZKPoProd| to provide an HVZK argument of knowledge for the relation \vs \[ \mc{R}_{{\ttt{LCM}}}[(a_1,b_1),\;(a_2,b_2), \; (a_3, b_3)] = \{((a_i, b_i\in\mb{G});\;d_i\in\bz)\;:\; b_i = a_i^{d_i},\;\LCM(d_1,d_2)=d_3 \} .\] This argument of knowledge can demonstrate that for data sets/multisets $\mc{D}_1,\mc{D}_2, \mc{D}_3$, we have \vs $$\mc{D}_3 = \mc{D}_1\cup \mc{D}_2 \vs $$ by setting \vs $$ d_i = \prod\limits_{d\in\mc{D}_i} x\;\;(i=1,2,3). $$
@@ -770,16 +854,18 @@ It is easy to see that the protocols \verb|ZKPoGCD| may be combined with the pro
 \noin - $\LCM(d_1, d_2) = d_3$
  
 
-\begin{enumerate}[wide, labelwidth=!, labelindent=0pt]\vs \item The Prover $\mP$ computes $b_{\ttt{gcd}}:= a^{\GCD(d_1,d_2)}\in \bG$ and sends to the Verifier $\V$ along with a non-interactive proof for $\ttt{ZKPoGCD}[(a,b_1),\;(a,b_2),\;(a,b_{\ttt{gcd}})]$.
+\begin{enumerate}[wide, labelwidth=!, labelindent=0pt]\vs \item The Prover $\mP$ computes $b_{\ttt{gcd}}:= a^{\GCD(d_1,d_2)}\in \bG$ and sends $b_{\ttt{gcd}}$ to the Verifier $\V$ along with a non-interactive proof for $\ttt{ZKPoGCD}[(a,b_1),\;(a,b_2),\;(a,b_{\ttt{gcd}})]$.
 
 \noin 2. $\mP$ computes $b_{\ttt{prod}}:= a^{d_1d_2}\in \bG$ and sends it to $\V$ along with a non-interactive proof for $\ttt{ZKPoProd}[(a, b_1), (a, b_2), (a,b_{\ttt{prod}})]$.
 
 \noin 3. $\mP$ generates a non-interactive proof for $\ttt{ZKPoProd}[(a, b_{\ttt{gcd}}),\;(a, b_3),\; (a,b_{\ttt{prod}})]$ and sends it to $\V$.
 
-\noin 4. $\V$ verifies the three proofs and aceepts if and only if they are all valid.\qed \end{enumerate}
+\noin 4. $\V$ verifies the three proofs and accepts if and only if they are all valid.\qed \end{enumerate}
 
 
-\bigskip
+
+
+\noin The HVZK arguments of knowledge for the GCD and the product can be combined to get an HVZK argument of knowledge for the difference of two sets or multisets.
 
 \begin{Prot} ZK Protocol for multiset differences $(\tt{ZKPoDiff})$\end{Prot} \vspace{-0.3cm}
 
@@ -802,7 +888,7 @@ It is easy to see that the protocols \verb|ZKPoGCD| may be combined with the pro
 
 
 
-
+\section{\fontsize{11}{11}\selectfont HVZK for sets for hiding commitments}
 
 
 
@@ -980,6 +1066,34 @@ Email: stevethakur01@gmail.com
 
 
 
+\section{\fontsize{11}{11}\selectfont Pedersen Commitments}
+
+
+\begin{Prot} \normalfont \hypertarget{Poly}{\textit{Zero knowledge proof of polynomial relation between discrete logarithms for Pedersen commitments}}(\verb|ZKPoPolyDLog|):\end{Prot} \vspace{-0.3cm}
+
+\noin \textbf{Parameters:} $\mb{G}\xleftarrow{\$} \mr{GGen}(\lamb)$,  $g,h\in \mb{G}$ such that $\la g \ra = \la h \ra$.
+
+\noin \textbf{Inputs:} Elements $a,b \in \mb{G}$; a public univariate polynomial $\mbf{f}(X)\in \bz[X]$; $B > 2^{2\lam}|\bG|$
+
+\noin \textbf{Claim:} The Prover possesses integers $d$, $e$, $\what{e}$ ($i=1,2$) such that $a = g^dh^e$, $b = g^{\mbf{f}(d)}h^{\what{e}}$.
+
+\begin{enumerate}[wide, labelwidth=!, labelindent=0pt]\vs \item The Prover $\mP$ chooses random $k, e_1\in[-B,B]$ and sends $A_1:= g^{k}$ to the Verifier $\V$.
+
+\noin 2. The hashing algorithm $\ttt{H}_{\ttt{FS},\lam}$ generates a $\lam$-bit prime $\gamma$.
+
+\noin 3. $\mP$ chooses a random $e_2 \in [-B,B]$ and sends $A_2:= g^{f(d_1+k\gamma)}h^{e_2}$ to $\V$.
+
+\noin 4. The hashing algorithm $\ttt{H}_{\ttt{FS},\lam}$ generates a $\lam$-bit prime $\ell$. 
+
+\noin 5. $\mP$ computes the integers $q_1$, $r_1$, $q_2$, $r_2$, $q_2'$, $s_2$ such that \vs $$d_1+k\gamma = q_1\cdot \ell + r_1\;,\; \mbf{f}(d_1+k\gamma) = q_2\cdot \ell + r_2 \;,\;\;e_2 = q_2'\cdot \ell+s_2  \;\;,\;\;r_1,r_2,s_2\in [\ell] \vs $$ and sends $r_1$, $s_2$, $Q_1:= g^{q_1}h^{q_1'}\;,\; Q_2:= g^{q_2}h^{q_2'}$ to $\V$.
+
+\noin 6. $\mP$ computes $\wti{h}:= h^{e-e_2}$ and sends it to $\V$ along with a non-interactive proof for $\ttt{ZKPoKE}[h,\;\wti{h}]$
+
+\noin 7. $\mP$ generates a non-interactive proof for $\ttt{ZKPoKE}[A_1^{\gamma},\;A_2\cdot b^{-1}\cdot \wti{h}]$.
+
+\noin 8. $\V$ verifies the $\ttt{ZKPoKE}$s he receives. 
+
+\noin 9. $\V$ verifies that $r_1,s_2\in [\ell]$ and computes $r_2:= \mbf{f}(r_1)\Mod{\ell}$. He verifies the equations \vs $$Q_1^{\ell}g^{r_1}h^{s_1} \sta a\cdot A_1^{\gamma}\;\;\bigwedge\;\; Q_2^{\ell}g^{r_2}h^{s_2}\sta A_2 \vs $$ and accepts if and only if all equations hold and all of the $\tt{ZKPoKE}$s are valid.\qed \end{enumerate}
 
 
 
