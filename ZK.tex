@@ -70,7 +70,7 @@
 \addtolength{\topmargin}{-60pt}
 \addtolength{\textheight}{1.5in}
 %\setlength{\parindent}{0in}
-\setlength{\parskip}{1pt}
+\setlength{\parskip}{0.75pt}
 
 
 \setlength{\abovedisplayskip}{0cm}
@@ -536,9 +536,18 @@ We first briefly review the protocol $\ttt{ZKPoKE}$ from [BBF19], which we will 
 
 \noin Clearly, the relation $\mc{R}_{\tt{PoKE}}$ is transitive in the sense that for elements $a_1,a_2,a_3\in\mb{G}$, if a prover $\mP$ possesses integers $d_1,d_2$ such that $a_1^{d_1} = a_2\;,\;a_2^{d_2} = a_3$, then he possesses the integer $d_1d_2$ which fulfills the equation $a_1^{d_1d_2} = a_3$. Henceforth, we denote the zero-knowledge proof of knowledge of the discrete logarithm between $a,b\in\mb{G}$ by $\verb|ZKPoKE|[a,\;b]$.
 
-In particular, if $a$, $b$ are commitments \vs $$ a = \ttt{Com}(g, \mc{M}) := g^{\Pi(\mcM)}\;\;,\;\;a = \ttt{Com}(g, \mc{N}) := g^{\Pi(\mc{N})}  \vs $$ to sets/multisets $\mcM$, $\mc{N}$ with  a common base $x\in\bG$, the protocol demonstrates that $\mcM\sub \mc{N}$ without revealing anything about $\mcM$ or $\mc{N}$. The protocol can also be adapted to a setting where the commitments to $\mc{M}$, $\mc{N}$ are made perfectly hiding using a Pedersen commitment.
+In particular, if $a$, $b$ are commitments \vs $$ a = \ttt{Com}(g, \mc{M}) := g^{\Pi(\mcM)}\;\;,\;\;b = \ttt{Com}(g, \mc{N}) := g^{\Pi(\mc{N})}  \vs $$ to sets/multisets $\mcM$, $\mc{N}$ with  a common base $x\in\bG$, the protocol demonstrates that $\mcM\sub \mc{N}$ without revealing anything about $\mcM$ or $\mc{N}$. The protocol can also be adapted to a setting where the commitments to $\mc{M}$, $\mc{N}$ are made perfectly hiding using a Pedersen commitment.
 
-Suppose $a = g^{d}h^{r}$, $b = g^{\wti{d}}h^{\wti{r}}$ where the integers $r$, $\wti{r}$ are randomly selected. To demonstrate that $d$ divides $\wti{d}$, the Prover and the Verifier may proceed as follows:\vspace{0.1cm}
+Suppose $a = g^{d}h^{r}$, $b = g^{\wti{d}}h^{\wti{r}}$ where the integers $r$, $\wti{r}$ are randomly selected. We provide an HVZK argument of knowledge for  the following relation:\vs
+
+\[
+  \mc{R}_{\ttt{PoKEPed}}[a,b] = \left\{\begin{array}{l}
+    ((a, b)\in\mb{G}^2)\\
+    (d_1,d_2,r_2,r_2)\in\mb{Z}^4): \\
+    a = g^{d_1}h^{r_1},\;b = g^{d_2}h^{r_2}\;\wedge\;d_1\big|d_2  \end{array}\right\}
+\] 
+
+\noin Given Pedersen commitments to sets or multisets $\mc{D}_1$, $\mc{D}_2$ such that $\mc{D}_1\cap \mc{D}_2$, the protocol allows a Prover to demonstrate this relation without revealing anything about the $\mc{D}_i$.
 
 \begin{Prot} \normalfont \hypertarget{ZKPoKEPed}{\textit{Zero knowledge proof of the knowledge of the Exponent for Pedersen commitments}} \end{Prot} \vspace{-0.3cm}
 
@@ -548,10 +557,7 @@ Suppose $a = g^{d}h^{r}$, $b = g^{\wti{d}}h^{\wti{r}}$ where the integers $r$, $
 
 \noin \textbf{Claim:} The Prover possesses integers $d_1,d_2$, $r_1,r_2$ such that \vs $$a = g^{d_1}h^{r_1} \;\wedge\; b = g^{d_2}h^{r_2} \;\wedge\; d_2\equiv 0\Mod{d_1} . \vs $$
 
-\begin{enumerate}[wide, labelwidth=!, labelindent=0pt]\vs \item
-
-
-\noin 1. The Prover $\mP$ computes the integer $e:= \wti{d}\cdot{d}^{-1}$ and sends $\wti{a}:= a^{e}\in \bG$ to the Verifier $\V$ along with a non-interactive proof for $\ttt{ZKPoKE}[a,\;\wti{a}]$.
+\begin{enumerate}[wide, labelwidth=!, labelindent=0pt]\vs \item The Prover $\mP$ computes the integer $e:= \wti{d}\cdot{d}^{-1}$ and sends $\wti{a}:= a^{e}\in \bG$ to the Verifier $\V$ along with a non-interactive proof for $\ttt{ZKPoKE}[a,\;\wti{a}]$.
 
 \noin 2. $\mP$ computes $\wti{h}:= \wti{a}^{-1}\cdot b\in \bG$ and sends a non-interactive proof for $\ttt{ZKPoKE}[h,\;\wti{h}]$ to $\V$.
 
@@ -701,7 +707,7 @@ Clearly, the relation $\mc{N}\sub \mc{M}$ can be demonstrated by the protocol \v
 
 \noin 3. $\sett(\mc{M}) = \sett(\mc{N})$ \vspace{0.1cm}
 
-\noin Before we describe the protocols, we note a few basic facts. Clearly, we have \vs $$\sett(\mc{M}) = \sett(\mc{N})\LRA \sett(\mc{M}) \sub \sett(\mc{N})\;\bigwedge\; \sett(\mc{N}) \sub \sett(\mc{M}).$$ Furthermore, with notations as before, we have \vs $$\sett(\mc{M})\sub \sett(\mc{N})\LRA \exists\; N\in\bz\;:\;\Pi(\mc{M})^N\equiv 0\Mod{\Pi(\mc{N})}.$$ Likewise, to show that $\sett(\mc{M})\nsub \sett(\mc{N})$, it suffices to show that there exists an integer $p$ such that \vs $$p\notin \{-1,1\}   \;\;\bigwedge\;\;\Pi(\mc{M})\equiv 0\Mod{p} \;\;\bigwedge\;\; \GCD(\Pi(\mc{N}),{p})=1.$$
+\noin Before we describe the protocols, we note a few basic facts. Clearly, we have \vs $$\sett(\mc{M}) = \sett(\mc{N})\LRA \sett(\mc{M}) \sub \sett(\mc{N})\;\bigwedge\; \sett(\mc{N}) \sub \sett(\mc{M}). \vs $$ Furthermore, with notations as before, we have \vs $$\sett(\mc{M})\sub \sett(\mc{N})\LRA \exists\; N\in\bz\;:\;\Pi(\mc{M})^N\equiv 0\Mod{\Pi(\mc{N})}.\vs $$ Likewise, to show that $\sett(\mc{M})\nsub \sett(\mc{N})$, it suffices to show that there exists an integer $p$ such that \vs $$p\notin \{-1,1\}   \;\;\bigwedge\;\;\Pi(\mc{M})\equiv 0\Mod{p} \;\;\bigwedge\;\; \GCD(\Pi(\mc{N}),{p})=1.$$
 
 \begin{Prot} \hypertarget{Sets}{ZK Proof of containment of underlying sets $(\tt{ZKPoConSets})$.}\end{Prot} \vspace{-0.3cm}
 
@@ -807,9 +813,14 @@ The goal of this section is to provide a protocol for demonstrating disjointness
 
 \begin{prf} This is a special case of Proposition \ref{GCDProof}.\end{prf}
 
-The protocol $\tt{ZKPoGCD}$ can also be adapted for Pedersen commitments to sets or multisets. Suppose $ a_i:= g^{d_i}h^{r_i}\in \bG $ ($i=1,2,3$) where the $d_i$ are integers such that $\GCD(d_1,d_2) = d_3$ and the $r_i$ are randomly selected integers. The Prover can demonstrate that $\GCD(d_1,d_2) = d_3$ as follows, without revealing anything about the integer $d_i$. \vspace{0.1cm}
+The protocol $\tt{ZKPoGCD}$ can also be adapted for Pedersen commitments to sets or multisets. Suppose $ a_i:= g^{d_i}h^{r_i}\in \bG $ ($i=1,2,3$) where the $d_i$ are integers such that $\GCD(d_1,d_2) = d_3$ and the $r_i$ are randomly selected integers. The Prover can demonstrate that $\GCD(d_1,d_2) = d_3$ as follows, without revealing anything about the integer $d_i$. We provide an HVZK argument of knwoledge for the relation \[
+  \mc{R}_{{\ttt{PolyDLogPed}}}[a_1,a_2,a_3] = \left\{\begin{array}{l}
+    \big(a_1,a_2,a_3\in\mb{G},\;\mbf{f}\in\bz[X]\big);\\
+    (d_1, d_2,d_3, e_1,e_2, e_6)\in\mb{Z}^6): \\
+    a_i = g^{d_i}h^{e_i}\;\forall\;\i\;\; \bigwedge\;\; \GCD(d_1,d_2) = d_3  \end{array}\right\}
+\] 
 
-\begin{Prot} \normalfont \hypertarget{GCDPedersen}{\textit{Zero knowledge proof of the GCD for Pedersen commitments}} (\verb|ZKPoGCD|):\end{Prot} \vspace{-0.3cm}
+\begin{Prot} \normalfont \hypertarget{GCDPedersen}{\textit{Zero knowledge proof of the GCD for Pedersen commitments}} (\verb|ZKPoGCDPed|):\end{Prot} \vspace{-0.3cm}
 
 \noin \textbf{Parameters:} $\mb{G}\xleftarrow{\$} \mr{GGen}(\lamb)$,  $g,h\in \mb{G}$ such that $\la g \ra = \la h \ra$.
 
@@ -845,7 +856,7 @@ It is easy to see that the protocols \verb|ZKPoGCD| may be combined with the pro
 \vspace{0.1cm}
 
 
-\begin{Prot} \normalfont \hypertarget{LCM}{\textit{Zero knowledge proof of the least common multiple}} (\verb|ZKPoLCM|):\end{Prot} \vspace{-0.3cm}
+\begin{Prot} \normalfont \hypertarget{LCM}{\textit{Zero knowledge proof of LCM}} (\verb|ZKPoLCM|):\end{Prot} \vspace{-0.3cm}
 
 \noin \textbf{Parameters:} $\mb{G}\xleftarrow{\$} \mr{GGen}(\lamb)$,  $g,h\in \mb{G}$ such that $\la g \ra = \la h \ra$.
 
@@ -1072,7 +1083,7 @@ Email: stevethakur01@gmail.com
 \section{\fontsize{11}{11}\selectfont Pedersen Commitments}
 
 
-\begin{Prot} \normalfont \hypertarget{Poly}{\textit{Zero knowledge proof of polynomial relation between discrete logarithms for Pedersen commitments}}(\verb|ZKPoPolyDLog|):\end{Prot} \vspace{-0.3cm}
+\begin{Prot} \normalfont \hypertarget{PolyPed}{\textit{Zero knowledge proof of polynomial relation between discrete logarithms for Pedersen commitments}}(\verb|ZKPoPolyDLogPed|):\end{Prot} \vspace{-0.3cm}
 
 \noin \textbf{Parameters:} $\mb{G}\xleftarrow{\$} \mr{GGen}(\lamb)$,  $g,h\in \mb{G}$ such that $\la g \ra = \la h \ra$.
 
@@ -1097,7 +1108,19 @@ Email: stevethakur01@gmail.com
 \noin 8. $\V$ verifies the two $\tt{ZKPoKE}$s he receives and verifies the equations \vs $$ Q_1^{\ell}\cdot g^{r_1}\cdot h^{s_1}\sta a\cdot A_1^{\gamma} \;\;\bigwedge\;\; Q_2^{\ell}\cdot g^{r_2}\cdot h^{s_2}\sta    A_2 .\vs $$ He accepts if and only if all equations hol and the two $\tt{ZKPoKE}$s are valid.\qed\end{enumerate}
 
 
-\begin{Prot} \normalfont \hypertarget{PoProdPed}{\textit{Zero knowledge proof of product of discrete logarithms for Pedersen commitments}} (\verb|ZKPoProd|):\end{Prot} \vspace{-0.3cm}
+We provide a HVZK argument of knowledge for the relation \[
+  \mc{R}_{{\ttt{PolyDLogPed}}}[a,b,\;\mbf{f}] = \left\{\begin{array}{l}
+    \big(a,b\in\mb{G},\;\mbf{f}\in\bz[X]\big);\\
+    (d_1, d_2, e_1,e_2)\in\mb{Z}^4): \\
+    a = g^{d_1}h^{e_1}\; \bigwedge\; b = g^{d_2}h^{e_2}\; \bigwedge \;d_2 = \mbf{f}(d_1)
+  \end{array}\right\}
+\] 
+
+
+
+
+
+\begin{Prot} \normalfont \hypertarget{PoProdPed}{\textit{Zero knowledge proof of product of discrete logarithms for Pedersen commitments}} (\verb|ZKPoProdPed|):\end{Prot} \vspace{-0.3cm}
 
 \noin \textbf{Parameters:} $\mb{G}\xleftarrow{\$} \mr{GGen}(\lamb)$,  $g,h\in \mb{G}$ such that $\la g \ra = \la h \ra$.
 
@@ -1113,7 +1136,87 @@ Email: stevethakur01@gmail.com
 
 \noin 4. $\mP$ computes $\wti{h}_2:= h^{e_2-k\cdot d_2}\;$, $\;\wti{h}_3:= h^{e_3-e_1\cdot d_2}$ and sends $\wti{h}_2$, $\wti{h}_3$ to $\V$ along with non-interactive proofs for $\ttt{ZKPoKE}[h,\;\wti{h}_2 ]$, $\ttt{ZKPoKE}[h,\;\wti{h}_3 ]$.
 
-\noin 5. $\V$ verifies the three $\tt{ZKPoKE}$s and the one $\ttt{ZKPoEqDLog}$ he receives and the equation \vs $$ \what{a}_2\cdot \wti{h}_2 \sta a_2\;\;\bigwedge\;\;\what{a}_3\cdot \wti{h}_3 \sta a_3. \vs $$ He accepts if and only if both equations hold and all three $\tt{ZKPoKE}$s and the $\ttt{ZKPoEqDLog}$ are valid.\qed \end{enumerate}
+\noin 5. $\V$ verifies the three $\tt{ZKPoKE}$s and the one $\ttt{ZKPoEqDLog}$ he receives. He then verifies the equations \vs $$ \what{a}_2\cdot \wti{h}_2 \sta a_2\;\;\bigwedge\;\;\what{a}_3\cdot \wti{h}_3 \sta a_3. \vs $$ He accepts if and only if both equations hold and all three $\tt{ZKPoKE}$s and the $\ttt{ZKPoEqDLog}$ are valid.\qed \end{enumerate}
+
+
+We provide a HVZK argument of knowledge for the relation \[
+  \mc{R}_{{\ttt{LCMPed}}}[a_1,a_2,a_3] = \left\{\begin{array}{l}
+    \big(a_1,a_2,a_3\in\mb{G} \big);\\
+    (d_1, d_2,d_3, e_1,e_2,e_3)\in\mb{Z}^6): \\
+    a_i = g^{d_1}h^{e_1}\;\forall\;i\;\; \bigwedge\;\; \LCM(d_1,d_2) = d_3   \end{array}\right\}
+\] 
+
+
+Given Pedersen commitments to sets or multisets $\mc{D}_i$ ($i=1,2,3$) such that $\mc{D}_1\cup \mc{D}_2 = \mc{D}_3$, the protocol allows a Prover to demonstrate this relation without revealing anything about the $\mc{D}_i$.
+
+
+
+\begin{Prot} \normalfont \hypertarget{PoLCMPed}{\textit{Zero knowledge proof of LCM for Pedersen commitments}} (\verb|ZKPoLCMPed|):\end{Prot} \vspace{-0.3cm}
+
+\noin \textbf{Parameters:} $\mb{G}\xleftarrow{\$} \mr{GGen}(\lamb)$,  $g,h\in \mb{G}$ such that $\la g \ra = \la h \ra$.
+
+\noin \textbf{Inputs:} Elements $a_1,a_2,a_3\in \mb{G}$
+
+\noin \textbf{Claim:} The Prover possesses integers $d_i$, $e_i$ ($i=1,2,3$) such that $a_i = g^{d_i}h^{e_i}$ and $\LCM(d_1,d_2) = d_3$.
+
+\begin{enumerate}[wide, labelwidth=!, labelindent=0pt]\vs \item The Prover $\mP$ chooses a random integer $e_{\ttt{GCD}}$ and sends $a_{\ttt{GCD}}:= g^{\GCD(d_1,d_2)}h^{e_{\ttt{GCD}}}$ to the Verifier $\V$ along with a non-interactive proof for $\ttt{ZKPoGCDPed}[a_1,a_2,a_{\ttt{GCD}}]$.
+
+\noin 2. $\mP$ chooses a random integer $e_{\ttt{prod}}$ and sends $a_{\ttt{prod}}:= g^{d_1d_2}h^{e_{\ttt{prod}}}$ to the Verifier $\V$ along with a non-interactive proof for $\ttt{ZKPoProdPed}[a_1,a_2,a_{\ttt{prod}}]$.
+
+\noin 3. $\mP$ generates a non-interactive proof for $\ttt{ZKPoProdPed}[a_3,a_{\ttt{GCD}}, a_{\ttt{prod}}]$ and sends it to $\V$.
+
+\noin 4. $\V$ verifies the three proofs he receives and accepts if and only if they are all valid.\qed \end{enumerate}
+
+ 
+
+
+
+
+
+
+\begin{comment}
+
+# Shrouded Socket
+
+Take Home Test
+
+## Rules
+
+
+
+We care about clean code, comments documenting assumptions/design choices/edge cases/..., and maybe even some tests. :-) 
+Please make sure to document how to compile and run your code.
+
+We should have granted you access to a private GitHub repository to share your work with us. If we did not, please reach out!
+
+## Task Description
+
+Alice wishes to receive confidential and authenticated data from a set of other parties (Bob, Charlotte, Dave, ...) whose identities she knows. To this end, she has set up a server that receives data over a TLS based protocol. Bob, Charlotte, ... run clients that communicate with Alice's server.
+
+This leaves Alice with a problem. Her certificate is publicly known and her server is exposed on the public internet. An attacker looking to find Alice's server could easily scan the entire IPv4 internet to find it (and subsequently mount a DDoS attack against it). Alice wants to *hide* her server: known parties that know her server's address should be able to connect, but the server should reveal as little information as possible to unknown parties. Can you help Alice?
+
+Design and implement a protocol that allows Alice's server to expose a _shrouded socket_. The shrouded socket protocol should work as follows:
+- On initiating a TCP connection to Server, Client will first send a special `unlock` message generated using Client's secret key.
+- Server will then verify that the unlock message is valid and belongs to one of the Clients whose public keys are on an allow list.
+	- If the verif ication succeeds, the connection 			should be upgraded to a regular TLS connection.
+	- If the verification fails, the connection should 		be closed. No TLS handshake takes place, and 			therefore the Server certificate is not revealed.
+
+You should:
+- design a shrouded socket protocol (in particular the `unlock` message) and document design concerns and decisions you made. You can use comments in your code or a separate file. Provide some reasoning for your design choices.
+- implement a server for the protocol
+- implement a client for the protocol
+
+Feel free to use external libraries for TLS/cryptography. You may generate certificates/keypairs in whatever format is easiest for your application to consume. To make your life easier, you may assume that the confidential data that is being sent by the clients is `"HI ALICE"`. (We care about the connection establishment process, not about the data being sent.)
+
+Hint: Certificates are not the only way to fingerprint a server. Think carefully about other means of fingerprinting and possible side channels. To make your life easier, you may assume that timing side channels whose exploitation requires collecting many samples are out of scope, though we'd appreciate you pointing them out.
+
+
+
+
+
+
+
+https://www.geeksforgeeks.org/implementation-diffie-hellman-algorithm/
 
 
 
@@ -1122,16 +1225,7 @@ Email: stevethakur01@gmail.com
 
 
 
-
-
-
-
-
-
-
-
-
-
+\end{comment}
 
 
 
